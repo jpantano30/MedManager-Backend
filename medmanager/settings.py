@@ -13,6 +13,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 # import django_heroku
 from pathlib import Path
 from datetime import timedelta
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,10 +28,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$@@8y&@ina+fz!c5^x96gnr@#$(5$&8vp6rq21j0ys=7u)#i8x'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
+# first arg = saved in .env, 2nd arg = false, "== 'True'" = ev are stored as strings, so if ev is set to boolean value, it needs to be retrieved and converted to a string so it is compared to a string
+# https://docs.python.org/3/library/os.html#os.getenv
+# https://docs.djangoproject.com/en/dev/ref/settings/#debug
+# https://stackoverflow.com/questions/30015462/django-ignoring-debug-value-when-i-use-os-environ-why
 
 ALLOWED_HOSTS = []
 
@@ -80,6 +90,37 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '{asctime} {levelname} {name} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        '': {  # 'root' logger
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        '__main__': {  # specific logger for main module if needed
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    }
+}
+
 
 ROOT_URLCONF = 'medmanager.urls'
 

@@ -9,7 +9,7 @@ class MedicationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Medication
-        fields = ['id', 'name', 'dosage', 'frequency', 'start_date', 'end_date', 'refill_due_date']
+        fields = ['id', 'name', 'dosage', 'frequency', 'start_date', 'end_date', 'refill_due_date', 'user']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
