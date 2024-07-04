@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Medication
+from .models import Medication, MedicationLog
 from django.contrib.auth.models import User
 
 class MedicationSerializer(serializers.ModelSerializer):
@@ -9,7 +9,13 @@ class MedicationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Medication
-        fields = ['id', 'name', 'dosage', 'frequency', 'start_date', 'end_date', 'refill_due_date', 'user']
+        fields = ['id', 'name', 'dosage', 'frequency', 'start_date', 'end_date', 'refill_due_date', 'taken', 'user']
+
+class MedicationLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MedicationLog
+        fields = ['id', 'user', 'medication', 'date', 'taken']
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,3 +39,4 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+    

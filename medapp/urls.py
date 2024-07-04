@@ -1,9 +1,10 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import MedicationViewSet, UserViewSet, MyTokenObtainPairView, MyTokenRefreshView
+from .views import MedicationViewSet, UserViewSet, MyTokenObtainPairView, MyTokenRefreshView, MedicationLogViewSet
 
 router = DefaultRouter()
 router.register(r'medications', MedicationViewSet)
+router.register(r'medication_logs', MedicationLogViewSet)
 router.register(r'users', UserViewSet)
 
 urlpatterns = [

@@ -1,15 +1,12 @@
-from rest_framework import viewsets, permissions, status
-from .models import Medication
-from .serializers import MedicationSerializer, UserSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.decorators import action
+from rest_framework import viewsets, permissions, status, response
 from rest_framework.response import Response
+from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from django.contrib.auth.models import User
+from .models import Medication, MedicationLog
+from .serializers import MedicationSerializer, UserSerializer, MedicationLogSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
-
-import logging
-logger = logging.getLogger(__name__)
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 class MedicationViewSet(viewsets.ModelViewSet):
     queryset = Medication.objects.all()
@@ -17,12 +14,15 @@ class MedicationViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        # filter to return meds for user 
         return Medication.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
+        # connect medication to user before saving
         serializer.save(user=self.request.user)
 
     def update(self, request, *args, **kwargs):
+        # handle updates to medication making sure user is the same
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         data = request.data.copy()
@@ -33,40 +33,32 @@ class MedicationViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
     
     def create(self, request, *args, **kwargs):
+        # create a new med for user
         data = request.data.copy()
         data['user'] = request.user.id
-        logger.info(f"Received data: {data}")
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+class MedicationLogViewSet(viewsets.ModelViewSet):
+    queryset = MedicationLog.objects.all()
+    serializer_class = MedicationLogSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-
-    # def list(self, request, *args, **kwargs):
-    #     logger.info(f"Headers: {request.headers}")
-    #     logger.info(f"User: {request.user}")
-    #     return super().list(request, *args, **kwargs)
-    # # list method: Overridden to log request headers and the user making the request before the standard list operation (getting the list of medications).
-    # # list = handling get requests intended to return a list 
-    # # self = instance of class 
-    # # request = http request object - hand meta data like headers, method used, who made request 
-    # # *args & **kwargs = allow the method to accept an arbitrary number of positional and keyword arguments which can be passed to the method from other parts of the django app or from django
-    # # the rest logs information - the headers of the request, the user who made the request
-    # # calls the list method of the medicationViewSet class using super() 
+    def get_queryset(self):
+        # return medication log for current user 
+        return self.queryset.filter(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        data = request.data.copy()
-        data['user'] = request.user.id
-        logger.info(f"Received data: {data}")
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # create a med log 
+        request.data['user'] = request.user.id
+        return super().create(request, *args, **kwargs)
 
+# Django's built in User model
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    # manages instances of Django's built in User model
-    serializer_class = UserSerializer
+    serializer_class = UserSerializer 
 
     def get_permissions(self):
         if self.action in ['create', 'token_obtain_pair', 'token_refresh']:
@@ -77,15 +69,17 @@ class UserViewSet(viewsets.ModelViewSet):
     # method: dynamically sets the permissions based on action. Public endpoints like registering a user and getting tokens are set to allowAny and the other require authentication 
 
     def create(self, request, *args, **kwargs):
+        # register a new user - validate and save user data 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        # headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     # method: handles creation of new user. Validates and saves user data and returns new user data with 201 http status("The HTTP 201 Created success status response code indicates that the request has succeeded and has led to the creation of a resource." https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201)
 
     @action(detail=False, methods=['get', 'put'], permission_classes=[IsAuthenticated])
     def profile(self, request):
+        # manage user profile - retrieve or update user data
         if request.method == 'GET':
             serializer = self.get_serializer(request.user)
             return Response(serializer.data)
@@ -94,7 +88,7 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
-        # action: a custom aaction to retrieve or update the authenticated user's profile. Responds based on the HTTP method (GET & PUT). 
+        # action: a custom action to retrieve or update the authenticated user's profile. Responds based on the HTTP method (GET & PUT). 
 
 class MyTokenObtainPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)

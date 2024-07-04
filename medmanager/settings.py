@@ -91,37 +91,6 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'simple': {
-            'format': '{asctime} {levelname} {name} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-        },
-    },
-    'loggers': {
-        '': {  # 'root' logger
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        '__main__': {  # specific logger for main module if needed
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-    }
-}
-
-
 ROOT_URLCONF = 'medmanager.urls'
 
 TEMPLATES = [
@@ -148,8 +117,12 @@ WSGI_APPLICATION = 'medmanager.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'default_db_name'), 
+        'USER': os.getenv('DB_USER', 'default_user'),
+        'PASSWORD': os.getenv('DB_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
 
