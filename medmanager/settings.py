@@ -16,6 +16,7 @@ from datetime import timedelta
 import os
 from dotenv import load_dotenv
 
+
 # Load environment variables
 load_dotenv()
 
@@ -37,7 +38,7 @@ DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 # https://stackoverflow.com/questions/30015462/django-ignoring-debug-value-when-i-use-os-environ-why
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['medmanager.herokuapp.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -155,7 +156,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+# Static files (CSS, JavaScript, Images)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
