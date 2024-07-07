@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-# import django_heroku
+import django_heroku
 from pathlib import Path
 from datetime import timedelta
 import os
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 ]
 
 # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/blacklist_app.html
+# https://django-rest-framework-simplejwt.readthedocs.io/en/stable/index.html
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -77,19 +78,12 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
 }
+# access token expires after 10 minutes so the refresh token will create a new access token and refresh token. 
 
 ROOT_URLCONF = 'medmanager.urls'
 
@@ -169,4 +163,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# django_heroku.settings(locals())
+django_heroku.settings(locals())

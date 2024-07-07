@@ -79,6 +79,20 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get', 'put'], permission_classes=[IsAuthenticated])
     def profile(self, request):
+        if request.method == 'GET':
+            serializer = self.get_serializer(request.user)
+            return Response(serializer.data)
+        elif request.method == 'PUT':
+            serializer = self.get_serializer(request.user, data=request.data, partial=True)
+            if not serializer.is_valid():
+                # Log the errors for debugging
+                print(f"Profile update errors: {serializer.errors}")
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response(serializer.data)
+
+    @action(detail=False, methods=['get', 'put'], permission_classes=[IsAuthenticated])
+    def profile(self, request):
         # manage user profile - retrieve or update user data
         if request.method == 'GET':
             serializer = self.get_serializer(request.user)
@@ -96,3 +110,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
 class MyTokenRefreshView(TokenRefreshView):
     permission_classes = (AllowAny,)
 # both of these classes are custom classes that come from the rest_framework_simplejwt package.Setting AllowAny lets unauthenticated users get or refresh their tokens 
+
+
+# https://dev.to/ki3ani/implementing-jwt-authentication-and-user-profile-with-django-rest-api-part-3-3dh9
