@@ -1,3 +1,4 @@
+<!-- markdownlint-disable -->
 # MedMangager API
 
 #### Description 
