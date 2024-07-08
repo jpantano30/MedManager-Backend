@@ -39,7 +39,7 @@ DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 # https://stackoverflow.com/questions/30015462/django-ignoring-debug-value-when-i-use-os-environ-why
 
-ALLOWED_HOSTS = ['medmanager-b797ac84ca9c.herokuapp.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -75,7 +75,10 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     'https://medmanager.netlify.app',
+    'http://localhost:3000'
 ]
+
+ROOT_URLCONF = 'medmanager.urls'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -91,7 +94,7 @@ SIMPLE_JWT = {
 }
 # access token expires after 10 minutes so the refresh token will create a new access token and refresh token. 
 
-ROOT_URLCONF = 'medmanager.urls'
+
 
 TEMPLATES = [
     {
@@ -127,7 +130,10 @@ WSGI_APPLICATION = 'medmanager.wsgi.application'
 # }
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 
@@ -166,8 +172,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 # Static files (CSS, JavaScript, Images)
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = 'static/'
 
 
 
