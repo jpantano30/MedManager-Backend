@@ -1,16 +1,11 @@
 from rest_framework import viewsets, permissions, status, response
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
 from django.contrib.auth.models import User
 from .models import Medication, MedicationLog
 from .serializers import MedicationSerializer, UserSerializer, MedicationLogSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.http import HttpResponse
-
-def index(request):
-    return HttpResponse('Welcome to MedManager API.')
 
 class MedicationViewSet(viewsets.ModelViewSet):
     queryset = Medication.objects.all()
