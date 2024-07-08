@@ -7,14 +7,24 @@ The MedManager API is designed to facilitate medication management by allowing u
 
 #
 
+###
+<a href="https://medmanager.netlify.app/login"> MedMangager</a>
+
+Heroku URl:
+<a href="https://medmanager-b797ac84ca9c.herokuapp.com">Backend URL</a>
+
+Frontend Repository:
+<a href="https://github.com/jpantano30/MedManager">Frontend Repository</a>
+
+
 #### Accessing the API
 
 The API is hosted on Heroku:
-<a href="">Backend URL</a>
+<a href="https://medmanager-b797ac84ca9c.herokuapp.com">Backend URL</a>
 
 To access the API, clients must first register and authenticate to receive a JWT (JSON Web Token). This token must be included in the header of subsequent requests to access protected endpoints.
 
-<!-- **Base URL:** https://medmanager-api.herokuapp.com/ -->
+**Base URL:** https://medmanager-b797ac84ca9c.herokuapp.com
 
 
 #
@@ -78,7 +88,7 @@ To access the API, clients must first register and authenticate to receive a JWT
 
 1. Clone the repository.
 2. Set up a virtual environment and install dependencies from `requirements.txt`.
-3. Configure environment variables for database settings and secret key.
+3. Configure environment variables.
 4. Run migrations using `python manage.py migrate`.
 5. Start the server with `python manage.py runserver`.
 
