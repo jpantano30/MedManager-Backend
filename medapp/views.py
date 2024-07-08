@@ -7,6 +7,10 @@ from .models import Medication, MedicationLog
 from .serializers import MedicationSerializer, UserSerializer, MedicationLogSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse('Welcome to MedManager API.')
 
 class MedicationViewSet(viewsets.ModelViewSet):
     queryset = Medication.objects.all()
