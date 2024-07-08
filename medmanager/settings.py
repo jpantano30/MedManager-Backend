@@ -15,7 +15,7 @@ from pathlib import Path
 from datetime import timedelta
 import os
 from dotenv import load_dotenv
-import dj_database_url
+
 
 
 # Load environment variables
@@ -71,12 +71,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGINS = [
-    'https://medmanager.netlify.app',
-    'http://localhost:3000'
-]
+# CORS_ALLOWED_ORIGINS = [
+#     'https://medmanager.netlify.app',
+#     'http://localhost:3000'
+# ]
 
 ROOT_URLCONF = 'medmanager.urls'
 
