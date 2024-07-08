@@ -38,7 +38,7 @@ DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 # https://stackoverflow.com/questions/30015462/django-ignoring-debug-value-when-i-use-os-environ-why
 
-ALLOWED_HOSTS = ['medmanager.herokuapp.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['medmanager-b797ac84ca9c.herokuapp.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
