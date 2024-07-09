@@ -108,7 +108,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 class MyTokenRefreshView(TokenRefreshView):
     permission_classes = (AllowAny,)
-# both of these classes are custom classes that come from the rest_framework_simplejwt package.Setting AllowAny lets unauthenticated users get or refresh their tokens 
+# both of these classes are custom classes that come from the rest_framework_simplejwt package.
 
 
 # https://dev.to/ki3ani/implementing-jwt-authentication-and-user-profile-with-django-rest-api-part-3-3dh9
